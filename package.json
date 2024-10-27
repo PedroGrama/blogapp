@@ -1,8 +1,13 @@
 {
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.11.0",
+    "@typescript-eslint/parser": "^8.11.0",
     "body-parser": "^1.20.3",
+    "connect-flash": "^0.1.1",
+    "eslint": "^9.13.0",
     "express": "^4.21.1",
     "express-handlebars": "^8.0.1",
+    "express-session": "^1.18.1",
     "mongoose": "^8.7.2"
   },
   "devDependencies": {
