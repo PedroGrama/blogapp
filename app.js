@@ -26,9 +26,15 @@ app.use((req, res, next)=>{
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({extended: true}))
-//app.use(bodyParser.json())
+//app.use(bodyParser.json()) Metodo antigo
 // Handlebars
-app.engine('handlebars', handlebars.engine({ defaultLayout: 'main' }));
+app.engine('handlebars', handlebars.engine({
+  defaultLayout: 'main',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  }
+}));
 app.set('view engine', 'handlebars');
 
 // Mongoose
@@ -50,6 +56,9 @@ app.use((req, res, next)=>{
 app.use(express.static(path.join(__dirname, "public")));
 
 // Rotas
+app.get('/', (req, res)=>{
+  res.render('index')
+})
 app.get('/posts', (req, res) => {
   res.send("Pagina de posts")
 })
