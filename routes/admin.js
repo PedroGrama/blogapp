@@ -13,7 +13,7 @@ router.get('/posts', (req, res) => {
     res.send('Pagina dos Posts')
 })
 router.get('/categorias', (req, res) => {
-    Categoria.find().sort({ date: 'desc' }).lean().then((categorias) => {
+    Categoria.find().sort({ nome:'asc', date: 'desc' }).lean().then((categorias) => {
         res.render('admin/categorias', { categorias, categorias })
     }).catch((err) => {
         req.flash('erro_msg', 'Houve um erro ao listar as categorias')
@@ -99,7 +99,7 @@ router.get('/postagens', (req, res) => {
 
 })
 router.get('/postagens/add', (req, res) => {
-    Categoria.find().then((categorias) => {
+    Categoria.find().sort({ nome: 'asc'}).lean().then((categorias) => {
         res.render('admin/addpostagens', { categorias: categorias })
     }).catch((err) => {
         req.flash('error_msg', 'Houve um erro ao carregar o formulario!')
@@ -133,7 +133,7 @@ router.post('/postagens/nova', (req, res) => {
 router.get('/postagens/edit/:id', (req, res) => {
     Postagem.findOne({ _id: req.params.id }).lean().then((postagem) => {
         if (postagem) {
-            Categoria.find().lean().then((categorias) => {
+            Categoria.find().sort({ nome: 'asc' }).lean().then((categorias) => {
                 res.render('admin/editpostagens', { postagem, categorias });
             }).catch((err) => {
                 req.flash('error_msg', 'Erro ao carregar categorias.');
@@ -168,11 +168,11 @@ router.post('/postagem/edit', (req, res) => {
     }
 
     if (req.body.titulo.length < 3) {
-        erros.push({ texto: 'Título muito pequeno' });
+        erros.push({ texto: 'Título muito pequeno' })
     }
 
     if (req.body.slug.length < 3) {
-        erros.push({ texto: 'Slug muito pequeno' });
+        erros.push({ texto: 'Slug muito pequeno' })
     }
 
     if (erros.length > 0) {
@@ -180,10 +180,11 @@ router.post('/postagem/edit', (req, res) => {
     } else {
         Postagem.findOne({ _id: req.body.id })
         .then((postagem) => {
-          postagem.titulo = req.body.titulo;
-          postagem.slug = req.body.slug;
-          postagem.descricao = req.body.descricao;
-          postagem.conteudo = req.body.conteudo;
+          postagem.titulo = req.body.titulo
+          postagem.slug = req.body.slug
+          postagem.descricao = req.body.descricao
+          postagem.conteudo = req.body.conteudo
+          postagem.categoria = req.body.categoria
       
           return postagem.save();
         })
@@ -203,8 +204,8 @@ router.post('/postagens/deletar/:id', (req, res)=>{
         req.flash('success_msg', 'Postagem deletada com sucesso!');
         res.redirect('/admin/postagens')
     }).catch((err) => {
-        req.flash('error_msg', 'Erro ao deletar postagem: ' + err.message);
-        res.redirect('/admin/postagens');
-      });
+        req.flash('error_msg', 'Erro ao deletar postagem: ' + err.message)
+        res.redirect('/admin/postagens')
+      })
 })
 module.exports = router;
